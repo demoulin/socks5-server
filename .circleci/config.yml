@@ -20,14 +20,13 @@ jobs:
     working_directory: /go/src/github.com/demoulin/sock5-server
     steps:
       - checkout
-      # specify any bash command here prefixed with `run: `
-        - run: go get -v -t -d ./...
-        - run: go test -v ./...
-      - build docker
         - run:
-            name: Build Docker image
-            command:
-              docker build -t demoulin/go-socks5-proxy .
+            name: Get go packages
+            command: go get -v -t -d ./...
+        - run: 
+            name: Test go packages
+            command: go test -v ./...
+      - build docker
       - install docker
         - run:
             name: Install Docker client
@@ -37,6 +36,9 @@ jobs:
               curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
               tar -xz -C /tmp -f /tmp/docker-$VER.tgz
               mv /tmp/docker/* /usr/bin
+        - run:
+            name: Build Docker image
+            command: docker build -t demoulin/go-socks5-proxy .
       # build and push Docker image
       - deploy
         - run:
