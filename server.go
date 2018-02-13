@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/getlantern/go-socks5"
+	"os"
 )
 
 func main() {
