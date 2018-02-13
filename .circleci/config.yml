@@ -31,7 +31,7 @@ jobs:
           command:
             docker build -t demoulin/go-socks5-proxy .
       - deploy:
-          command: |
+          command:
             docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
             if [ $CIRCLE_TAG -ne "undefined" ];
             then
