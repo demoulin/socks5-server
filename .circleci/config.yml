@@ -1,38 +1,14 @@
-# Golang CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
 jobs:
-  build:
+  build-job:
     docker:
-      - image: circleci/golang:1.8
+      - { image: 'circleci/golang:1.8' }
     working_directory: /go/src/github.com/demoulin/sock5-server
-      - run:
-            name: Get go packages
-            command: go get -v -t -d ./...
-      - run: 
-            name: Test go packages
-            command: go test -v ./...
-      - run:
-            name: Install Docker client
-            command: |s
-              set -x
-              VER="17.12.0-ce"
-              curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
-              tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-              mv /tmp/docker/* /usr/bin
-              docker build -t demoulin/go-socks5-proxy .
-  deploy:
-    working_directory: /go/src/github.com/demoulin/sock5-server
-      - run:
-        name: Docker Push
-        command: |
-          docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
-            if [ $CIRCLE_TAG -ne "undefined" ];
-            then
-              docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG
-              docker push demoulin/go-socks5-proxy:$CIRCLE_TAG
-            else
-              docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:dev
-              docker push demoulin/go-socks5-proxy:dev
-            fi
+    steps:
+      '-run': { command: "docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD\n  if [ $CIRCLE_TAG -ne \"undefined\" ];\n  then\n    docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG\n    docker push demoulin/go-socks5-proxy:$CIRCLE_TAG\n  else\n    docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:dev\n    docker push demoulin/go-socks5-proxy:dev\n  fi\n" }
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-job
+      - { deploy-job: { requires: [build-job] } }
