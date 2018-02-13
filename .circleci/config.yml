@@ -42,7 +42,7 @@ jobs:
       - deploy
       - run:
           name: Docker Push
-          command: 
+          command: |
           docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
             if [ $CIRCLE_TAG -ne "undefined" ];
             then
