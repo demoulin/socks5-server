@@ -30,7 +30,6 @@ jobs:
           name: Build Docker image
           command:
             docker build -t demoulin/go-socks5-proxy .
-      - deploy:
       - run:
           name: Install Docker client
           command: |
@@ -40,13 +39,11 @@ jobs:
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             mv /tmp/docker/* /usr/bin
       # build and push Docker image
-      - run: |
-          TAG=0.1.$CIRCLE_BUILD_NUM
-          docker build -t   CircleCI-Public/circleci-demo-docker:$TAG .      # (4)
-          docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
-          docker push CircleCI-Public/circleci-demo-docker:$TAG
-          command:
-            docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+      - deploy
+      - run:
+          name: Docker Push
+          command: 
+          docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
             if [ $CIRCLE_TAG -ne "undefined" ];
             then
               docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG
