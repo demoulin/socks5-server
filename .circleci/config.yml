@@ -7,37 +7,32 @@ jobs:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/demoulin/sock5-server
-    steps:
-      - checkout
-        - run:
+      - run:
             name: Get go packages
             command: go get -v -t -d ./...
-        - run: 
+      - run: 
             name: Test go packages
             command: go test -v ./...
-      - build
-        - run:
+      - run:
             name: Install Docker client
-            command: |
+            command: |s
               set -x
               VER="17.12.0-ce"
               curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
               tar -xz -C /tmp -f /tmp/docker-$VER.tgz
               mv /tmp/docker/* /usr/bin
               docker build -t demoulin/go-socks5-proxy .
-      # build and push Docker image
-     deploy:
-        working_directory: /go/src/github.com/demoulin/sock5-server
-        steps:
-          - run:
-            name: Docker Push
-            command: |
-              docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
-                if [ $CIRCLE_TAG -ne "undefined" ];
-                then
-                  docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG
-                  docker push demoulin/go-socks5-proxy:$CIRCLE_TAG
-                else
-                  docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:dev
-                  docker push demoulin/go-socks5-proxy:dev
-                fi
+  deploy:
+    working_directory: /go/src/github.com/demoulin/sock5-server
+      - run:
+        name: Docker Push
+        command: |
+          docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+            if [ $CIRCLE_TAG -ne "undefined" ];
+            then
+              docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG
+              docker push demoulin/go-socks5-proxy:$CIRCLE_TAG
+            else
+              docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:dev
+              docker push demoulin/go-socks5-proxy:dev
+            fi
