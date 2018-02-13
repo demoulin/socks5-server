@@ -18,7 +18,7 @@ func main() {
 	}
 	server, err := socks5.New(conf)
 	if err != nil {
-		panic(err)s
+		panic(err)
 	}
 
 	// Create SOCKS5 proxy on localhost port 8000
