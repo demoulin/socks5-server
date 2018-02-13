@@ -20,35 +20,34 @@ jobs:
     working_directory: /go/src/github.com/demoulin/sock5-server
     steps:
       - checkout
-
       # specify any bash command here prefixed with `run: `
-      - run: go get -v -t -d ./...
-      - run: go test -v ./...
-
-      - checkout
-      - run:
-          name: Build Docker image
-          command:
-            docker build -t demoulin/go-socks5-proxy .
-      - run:
-          name: Install Docker client
-          command: |
-            set -x
-            VER="17.12.0-ce"
-            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
-            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-            mv /tmp/docker/* /usr/bin
+        - run: go get -v -t -d ./...
+        - run: go test -v ./...
+      - build docker
+        - run:
+            name: Build Docker image
+            command:
+              docker build -t demoulin/go-socks5-proxy .
+      - install docker
+        - run:
+            name: Install Docker client
+            command: |
+              set -x
+              VER="17.12.0-ce"
+              curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+              tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+              mv /tmp/docker/* /usr/bin
       # build and push Docker image
       - deploy
-      - run:
-          name: Docker Push
-          command: |
-          docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
-            if [ $CIRCLE_TAG -ne "undefined" ];
-            then
-              docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG
-              docker push demoulin/go-socks5-proxy:$CIRCLE_TAG
-            else
-              docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:dev
-              docker push demoulin/go-socks5-proxy:dev
-            fi
+        - run:
+            name: Docker Push
+            command: |
+              docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+                if [ $CIRCLE_TAG -ne "undefined" ];
+                then
+                  docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:$CIRCLE_TAG
+                  docker push demoulin/go-socks5-proxy:$CIRCLE_TAG
+                else
+                  docker tag demoulin/go-socks5-proxy demoulin/go-socks5-proxy:dev
+                  docker push demoulin/go-socks5-proxy:dev
+                fi
