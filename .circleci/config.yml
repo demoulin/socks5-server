@@ -3,7 +3,7 @@
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
 jobs:
-  build-job:
+  build:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/demoulin/sock5-server
@@ -26,7 +26,7 @@ jobs:
               mv /tmp/docker/* /usr/bin
               docker build -t demoulin/go-socks5-proxy .
       # build and push Docker image
-     deploy-job:
+     deploy:
         working_directory: /go/src/github.com/demoulin/sock5-server
         steps:
           - run:
