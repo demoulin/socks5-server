@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/armon/go-socks5"
+	"github.com/getlantern/go-socks5"
 	"os"
 	"log"
 )
@@ -18,7 +18,7 @@ func main() {
 	}
 	server, err := socks5.New(conf)
 	if err != nil {
-		panic(err)
+		panic(err)s
 	}
 
 	// Create SOCKS5 proxy on localhost port 8000

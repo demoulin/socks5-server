@@ -1,10 +1,12 @@
+FORK FROM https://github.com/serjs/socks5-server
+
 # go-socks5-proxy
-[![CircleCI](https://circleci.com/gh/serjs/socks5-server.svg?style=shield)](https://circleci.com/gh/serjs/socks5-server)
+[![CircleCI](https://circleci.com/gh/demoulin/socks5-server.svg?style=shield)](https://circleci.com/gh/demoulin/socks5-server)
 
 Simple socks5 server using go-socks5 with auth
 
 # Start container with proxy
-```docker run -d --name socks5-proxy -p 1080:1080 -e PROXY_USER=<PROXY_USER> -e PROXY_PASSWORD=<PROXY_PASSWORD> serjs/go-socks5-proxy```
+```docker run -d --name socks5-proxy -p 1080:1080 -e PROXY_USER=<PROXY_USER> -e PROXY_PASSWORD=<PROXY_PASSWORD> demoulin/go-socks5-proxy```
 
 where
 
