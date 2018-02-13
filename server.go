@@ -2,8 +2,6 @@ package main
 
 import (
 	"github.com/getlantern/go-socks5"
-	"os"
-	"log"
 )
 
 func main() {
@@ -14,7 +12,7 @@ func main() {
 	// Create a SOCKS5 server
 	conf := &socks5.Config{
 		AuthMethods: []socks5.Authenticator{cator},
-		Logger:      log.New(os.Stdout, "", log.LstdFlags),
+		// Logger:      log.New(os.Stdout, "", log.LstdFlags),
 	}
 	server, err := socks5.New(conf)
 	if err != nil {
